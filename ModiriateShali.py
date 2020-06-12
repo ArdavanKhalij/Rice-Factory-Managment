@@ -26,7 +26,7 @@ shaliForPrintToPDF = []
 ####################### GLOBAL VARS #######################
 
 root = Tk()
-root.title("مدریت شالی ها")
+root.title("مدیریت شالی ها")
 root.configure(bg='#E3F0EB')
 
 class all() :
@@ -876,7 +876,9 @@ class all() :
                 for i in self.shaliTreeList.get_children():
                     self.shaliTreeList.delete(i)
                 for i in range(0, len(r.json())):
-                    self.shaliTreeList.insert("", "end", values=(
+                    for j in range(0, len(r.json()[i]['shaliha'])):
+                        self.shaliTreeList.insert("", "end", values=(
+                        str(r.json()[i]['shaliha'][j]['id']),
                         str(r.json()[i]['nam']),
                         str(r.json()[i]['code']),
                         str(r.json()[i]['tarikh']),
@@ -1040,7 +1042,7 @@ class all() :
         searching = Button(self.sabteBerenjPageRoot, text="جستجو", bg='#A2DDA5', font=('IRANYekan', '20'), command=ALLPages.showSearch)
         sabt.config(height=1, width=20)
         searching.config(height=1, width=20)
-        cols = ('نام کشاورز', 'کد کشاورز', 'تاریخ', 'ساعت')
+        cols = ('کد شالی','نام کشاورز', 'کد کشاورز', 'تاریخ', 'ساعت')
         self.shaliTreeList = ttk.Treeview(self.sabteBerenjPageRoot, columns=cols, show='headings')
         # set column headings
         for col in cols:
@@ -1049,6 +1051,29 @@ class all() :
         self.shaliTreeList.column("1", anchor="c")
         self.shaliTreeList.column("2", anchor="c")
         self.shaliTreeList.column("3", anchor="c")
+        self.shaliTreeList.column("4", anchor="c")
+        try:
+            urllib.request.urlopen('http://google.com')
+            internetConnectionFlag = True
+        except:
+            internetConnectionFlag = False
+        urlForSearch = 'https://shali-firstsite.fandogh.cloud/api/keshavarz/list/'
+        if internetConnectionFlag:
+            r = requests.get(urlForSearch)
+            print(r.json())
+            if len(r.json())>0:
+                for i in self.shaliTreeList.get_children():
+                    self.shaliTreeList.delete(i)
+                for i in range(0, len(r.json())):
+                    for j in range(0, len(r.json()[i]['shaliha'])):
+                        self.shaliTreeList.insert("", "end", values=(
+                        str(r.json()[i]['shaliha'][j]['id']),
+                        str(r.json()[i]['nam']),
+                        str(r.json()[i]['code']),
+                        str(r.json()[i]['tarikh']),
+                        str(r.json()[i]['saat'])))
+        else:
+            print("NOOOOO")
         vsb = ttk.Scrollbar(orient="vertical", command=self.shaliTreeList.yview)
         self.shaliTreeList.configure(yscrollcommand=vsb.set)
         space.pack()
@@ -1437,7 +1462,7 @@ def menu():
             isItInThere = False
     if not isItInThere:
         valuelistForNamesOfComboBox.append(addToNames)
-    with open('listfile.txt', 'w') as filehandle:
+    with open('listfile.txt', 'w', encoding="utf-8") as filehandle:
         for listitem in valuelistForNamesOfComboBox:
             if listitem!="" and listitem!= "  نام و نام خانوادگی":
                 filehandle.write('%s\n' % listitem)
@@ -1491,23 +1516,9 @@ def menu():
     else:
         messagebox.showinfo("اتصال اینترنت", ".اینترنت شما متصل نیست")
 
-# def MakePDF(fileName, title, textLines):
-#     pdf = canvas.Canvas(fileName, pagesize=A4)
-#     pdf.setTitle("سامانه مدیرت شالی")
-#     pdf.setFillColorRGB(0, 0, 255)
-#     pdfmetrics.registerFont(
-#         TTFont('IRANSanse', 'IRANSans_Light.ttf')
-#     )
-#     pdf.setFont("IRANSanse", 22)
-#     pdf.drawCentredString(300, 770, title)
-#     pdf.line(30, 720, 550, 720)
-#     text = pdf.beginText(40, 690)
-#     text.setFont("IRANSanse", 8)
-#     text.setFillColor(colors.black)
-#     for line in textLines:
-#         text.textLine(line)
-#     pdf.drawText(text)
-#     pdf.save()
+def MakePDF(fileName, title, textLines):
+    print('hello')
+    
 
 space = Label(root, text=" ", bg='#E3F0EB')
 space1 = Label(root, text=" ", bg='#E3F0EB')
@@ -1519,14 +1530,14 @@ title1 = Label(root, text="لطفاً نام و نام خانوادگی خود �
 title3 = Label(root, text=".و در غیر این صورت نام و نام خانوادگی خود را وارد کنید", font=('IRANYekan', '20'), bg='#E3F0EB')
 
 name2 = Entry(root, width=62, justify='right', font=('IRANYekan', 12))
-name2.insert(0, "  نام و نام خانوادگی")
+name2.insert(0, "نام و نام خانوادگی")
 name = ttk.Combobox(root, width=60, justify='right', font=('IRANYekan', 12))
 valuelistForNamesOfComboBox.clear()
 
-with open('listfile.txt', 'r') as filehandle:
+with open('listfile.txt', 'r', encoding="utf-8") as filehandle:
     for line in filehandle:
         currentPlace = line[:-1]
-        if currentPlace!="" and currentPlace!= "  نام و نام خانوادگی":
+        if currentPlace!="" and currentPlace!= "نام و نام خانوادگی":
             valuelistForNamesOfComboBox.append(currentPlace)
 
 name['values'] = valuelistForNamesOfComboBox
