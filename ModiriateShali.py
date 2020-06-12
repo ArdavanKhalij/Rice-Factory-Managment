@@ -3,16 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import urllib
 from urllib import request
-# from reportlab.pdfgen import canvas
-# from reportlab.pdfbase.ttfonts import TTFont
-# from reportlab.pdfbase import pdfmetrics
-# from reportlab.lib import colors
-# from reportlab.lib.enums import TA_RIGHT
-# from reportlab.lib.pagesizes import A4
 import requests
-# import reportlab
-# import os
-# import socket
 
 ####################### GLOBAL VARS #######################
 valuelistForNamesOfComboBox = []
@@ -1116,9 +1107,9 @@ class all() :
         space6 = Label(self.sabteBerenjChoosenPageRoot, text=" ", bg='#E3F0EB')
         CodeAndNameAndPhoneAndDriverName = Label(self.sabteBerenjChoosenPageRoot)
         if internetConnectionFlag:
-            url = 'https://shali-firstsite.fandogh.cloud/api/keshavarz/'+str(k['values'][1])+'/'
+            url = 'https://shali-firstsite.fandogh.cloud/api/keshavarz/'+str(k['values'][2])+'/'
             r = requests.get(url)
-            CodeAndNameAndPhoneAndDriverName.configure(text="   نام کشاورز: " + str(k['values'][0]) + "   کد: " + str(k['values'][1]) + "   راننده: " + str(r.json()['ranande']) + "   تلفن: " + str(r.json()['telefon']), font=('IRANYekan', '18'), bg='#E3F0EB')
+            CodeAndNameAndPhoneAndDriverName.configure(text="   نام کشاورز: " + str(k['values'][0]) + "   کد: " + str(k['values'][2]) + "   راننده: " + str(r.json()['ranande']) + "   تلفن: " + str(r.json()['telefon']), font=('IRANYekan', '18'), bg='#E3F0EB')
         else:
             CodeAndNameAndPhoneAndDriverName.configure(text="کد: 101    نام: اردوان خلیج    تلفن: 09120864054    راننده: مسعود خداوردبان", font=('IRANYekan', '18'))
         self.number = Entry(self.sabteBerenjChoosenPageRoot, width=70, justify='right', font=('IRANYekan', 16), fg='#4C967D')
@@ -1515,10 +1506,6 @@ def menu():
         messagebox.showinfo("اتصال اینترنت", ".اینترنت شما متصل است")
     else:
         messagebox.showinfo("اتصال اینترنت", ".اینترنت شما متصل نیست")
-
-def MakePDF(fileName, title, textLines):
-    print('hello')
-    
 
 space = Label(root, text=" ", bg='#E3F0EB')
 space1 = Label(root, text=" ", bg='#E3F0EB')
