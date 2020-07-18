@@ -15,66 +15,18 @@ sabteKeshavarzPOST = {}
 global shaliForPrintToPDF
 shaliForPrintToPDF = []
 ####################### GLOBAL VARS #######################
-
 root = Tk()
 root.title("مدیریت شالی ها")
 root.configure(bg='#E3F0EB')
+######################### Classes #########################
+class Singleton(type):
+    _instance = None
+    def __call__(self, *args, **kwargs):
+        if self._instance is None:
+            self._instance = super().__call__()
+        return self._instance
 
-class all() :
-    def sabteShaliPage2(self):
-        self.listBox.bind('<Button-1>', self.editShali)
-        curItem = self.listBox.focus()
-        self.k = self.listBox.item(curItem)
-        try:
-            print(self.k['values'][0])
-        except:
-            messagebox.showinfo('عدم انتخاب', '.موردی را برای اضافه کردن انتخاب نکردید')
-            self.shaliHayeSabtShodePageRoot.destroy()
-            ALLPages.shaliHayeSabtShodePage()
-            self.sabteShodeHaPageRoot.destroy()
-            ALLPages.sabtShodeHaPage()
-            return
-        try:
-            urlSabeKeshavarz = "https://shali-firstsite.fandogh.cloud/api/shali/new/"
-        except:
-            messagebox.showinfo('عدم انتخاب', '.موردی را برای اضافه کردن انتخاب نکردید')
-            self.shaliHayeSabtShodePageRoot.destroy()
-            ALLPages.shaliHayeSabtShodePage()
-            self.sabteShodeHaPageRoot.destroy()
-            ALLPages.sabtShodeHaPage()
-            return
-        self.sabteShaliPageRoot = Tk()
-        self.sabteShaliPageRoot.configure(bg='#E3F0EB')
-        self.sabteShaliPageRoot.title("ثبت شالی")
-        self.space = Label(self.sabteShaliPageRoot, text=" ", bg='#E3F0EB')
-        self.space1 = Label(self.sabteShaliPageRoot, text=" ", bg='#E3F0EB')
-        self.space2 = Label(self.sabteShaliPageRoot, text=" ", bg='#E3F0EB')
-        self.space3 = Label(self.sabteShaliPageRoot, text=" ",bg='#E3F0EB')
-        self.title = Label(self.sabteShaliPageRoot, text="ثبت شالی", font=('IRANYekan', '22'), bg='#E3F0EB')
-        self.shaliBagNumberTextLabel = Entry(self.sabteShaliPageRoot, width=70, justify='right', font=('IRANYekan', 16), fg='#4C967D')
-        self.shaliBagNumberTextLabel.insert(0, "تعداد کیسه شالی")
-        self.shaliWeightTextLabel = Entry(self.sabteShaliPageRoot, width=70, justify='right', font=('IRANYekan', 16), fg='#4C967D')
-        self.shaliWeightTextLabel.insert(0, "وزن شالی")
-        self.shaliKindTextLabel = Entry(self.sabteShaliPageRoot, width=70, justify='right', font=('IRANYekan', 16), fg='#4C967D')
-        self.shaliKindTextLabel.insert(0, "نوع شالی")
-        self.shaliTozihTextLabel = Entry(self.sabteShaliPageRoot, width=70, justify='right', font=('IRANYekan', 16), fg='#4C967D')
-        self.shaliTozihTextLabel.insert(0, "توضیحات")
-        self.sabt = Button(self.sabteShaliPageRoot, text="ثبت", bg='#A2DDA5', font=('IRANYekan', '20'), command= ALLPages.postorSaveThenPost2)
-        self.sabt.config(height=1, width=20)
-        clear = Button(self.sabteShaliPageRoot, text="پاک", bg='#A2DDA5', font=('IRANYekan', '20'), command=ALLPages.clearSabteShali)
-        clear.config(height=1, width=20)
-        self.space.pack()
-        self.title.pack()
-        self.space1.pack()
-        self.shaliBagNumberTextLabel.pack()
-        self.shaliWeightTextLabel.pack()
-        self.shaliKindTextLabel.pack()
-        self.shaliTozihTextLabel.pack()
-        self.space2.pack()
-        clear.pack()
-        self.sabt.pack()
-        self.space3.pack()
-
+class all(metaclass=Singleton) :
     def sabteShaliPage(self):
         self.sabteShaliPageRoot = Tk()
         self.sabteShaliPageRoot.configure(bg='#E3F0EB')
@@ -187,43 +139,54 @@ class all() :
         self.sabte.pack()
         self.space3.pack()
 
-    def postorSaveThenPost2(self):
+    def postorSaveThenPost(self):
         try:
             urllib.request.urlopen('http://google.com')
             internetConnectionFlag = True
         except:
             internetConnectionFlag = False
         if internetConnectionFlag:
-            urlSabeKeshavarz = "https://shali-firstsite.fandogh.cloud/api/keshavarz/search/"+str(self.k['values'][5])+"/"
-            print(self.k['values'][5])
-            r = requests.get(urlSabeKeshavarz)
-            print(r.json())
+            urlSabeKeshavarz = "https://shali-firstsite.fandogh.cloud/api/keshavarz/new/"
+            makan = str(self.farmerNameTextLabel.get())
+            nam = str(self.farmerNameTextLabel.get())
+            ranande = str(self.driverTextLabel.get())
+            telefon = str(self.phoneTextLabel.get())
+            nam_ijad_konande = NameOfUser
+            sabteKeshavarzPOST = {'makan': makan, 'nam': nam, 'ranande': ranande, 'telefon': telefon, 'nam_ijad_konande': nam_ijad_konande}
+            r = requests.post(urlSabeKeshavarz, data=sabteKeshavarzPOST)
+            print(r.status_code)
+            print(r.text)
+            try:
+                CodeOfKeshavars = int(r.json()['code'])
+            except:
+                messagebox.showinfo('خطا در ورودی', '.به ورودی های خود دقت کنید')
+                return
+            print(CodeOfKeshavars)
+            urlSabeteShali = "https://shali-firstsite.fandogh.cloud/api/shali/new/"
+            noe_shali = str(self.shaliKindTextLabel.get())
             try:
                 tedad_shali = int(self.shaliBagNumberTextLabel.get())
             except:
-                messagebox.showinfo('خطا در ورودی','در تعداد شالی ها مشکلی وجود دارد')
+                messagebox.showinfo('مشکل ورودی در تعداد شالی','.لطفا ورودی تعداد شالی های خود را بررسی کنید. در نوع و یا تعداد مشکلی وجود دارد')
+                self.sabteShaliPageRoot.destroy()
                 return
             try:
                 vazn_shali = int(self.shaliWeightTextLabel.get())
             except:
-                messagebox.showinfo('خطا در ورودی','در وزن شالی ها مشکلی وجود دارد')
-                return
-            noe_shali = str(self.shaliKindTextLabel.get())
-            try:
-                keshavarz = int(r.json()[0]['code'])
-            except:
-                messagebox.showinfo('خطا در ورودی','در انتخاب شالی و کشاورز مشکلی وجود دارد')
-                return
+                messagebox.showinfo('مشکل ورودی در وزن شالی','.لطفا ورودی وزن شالی های خود را بررسی کنید. در نوع و یا تعداد مشکلی وجود دارد')
+                self.sabteShaliPageRoot.destroy()
+                self.shaliHayeSabtShodePageRoot.destroy()
+                self.shaliHayeSabtShodePage()
             tozihat = str(self.shaliTozihTextLabel.get())
-            nam_ijad_konande = NameOfUser
-            if tedad_shali<0 or vazn_shali<0 :
-                messagebox.showinfo('خطا در ورودی', '.در ورودی مشکلی وجود دارد')
-                return
-            url = 'https://shali-firstsite.fandogh.cloud/api/shali/new/'
-            sabteShaliPOST = {'noe_shali': noe_shali, 'tedad_shali': tedad_shali, 'vazn_shali': vazn_shali, 'keshavarz': keshavarz, 'nam_ijad_konande': nam_ijad_konande}
-            r = requests.post(url, data=sabteShaliPOST)
+            nam_ijad_konande = str(NameOfUser)
+            sabteShaliPOST = {'noe_shali': noe_shali, 'tedad_shali': tedad_shali, 'vazn_shali': vazn_shali, 'keshavarz': CodeOfKeshavars, 'nam_ijad_konande': nam_ijad_konande, 'tozihat': tozihat}
+            r1 = requests.post(urlSabeteShali, data=sabteShaliPOST)
+            print(r1.status_code)
+            print(r1.text)
+            if makan=='' or nam=='' or ranande=='' or telefon=='' or nam_ijad_konande=='' or tedad_shali=='' or noe_shali=='' or vazn_shali=='' or tozihat=='':
+                messagebox.showinfo('ورودی ناقص', '.تمام فیلد هارا پر کنید')
         else:
-            print('No')
+            print("NOOOO")
         self.sabteShaliPageRoot.destroy()
         self.shaliHayeSabtShodePageRoot.destroy()
         self.shaliHayeSabtShodePage()
@@ -476,7 +439,7 @@ class all() :
         # set column headings
         for col in cols:
             self.listBox.heading(col, text=col)
-        self.sabt = Button(self.shaliHayeSabtShodePageRoot, text="ثبت شالی دیگر", bg='#A2DDA5', font=('IRANYekan', '15'), command=ALLPages.sabteShaliPage2)
+        self.sabt = Button(self.shaliHayeSabtShodePageRoot, text="ثبت شالی دیگر", bg='#A2DDA5', font=('IRANYekan', '15'), command=ALLPages.sabteShaliPage)
         self.sabt.config(height=1, width=20)
         self.delete = Button(self.shaliHayeSabtShodePageRoot, text="حذف", bg='#A2DDA5', font=('IRANYekan', '15'), command = ALLPages.deleteFromShali)
         self.delete.config(height=1, width=20)
