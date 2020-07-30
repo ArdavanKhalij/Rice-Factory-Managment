@@ -1511,48 +1511,46 @@ def menu():
     else:
         messagebox.showinfo("اتصال اینترنت", ".اینترنت شما متصل نیست")
 ##### Something like Facade but i have just one class #####
-def menutostart():
-    root = Tk() 
-    root.title("مدیریت شالی ها")
-    root.configure(bg='#E3F0EB')
-    space = Label(root, text=" ", bg='#E3F0EB')
-    space1 = Label(root, text=" ", bg='#E3F0EB')
-    space2 = Label(root, text=" ", bg='#E3F0EB')
-    space3 = Label(root, text=" ", bg='#E3F0EB')
-    space4 = Label(root, text=" ", bg='#E3F0EB')
-    title = Label(root, text=".سلام، خوش آمدید", font=('IRANYekan', '22'), bg='#E3F0EB')
-    title1 = Label(root, text="لطفاً نام و نام خانوادگی خود را در صورت موجود بودن در لیست انتخاب کنید",
+root = Tk() 
+root.title("مدیریت شالی ها")
+root.configure(bg='#E3F0EB')
+space = Label(root, text=" ", bg='#E3F0EB')
+space1 = Label(root, text=" ", bg='#E3F0EB')
+space2 = Label(root, text=" ", bg='#E3F0EB')
+space3 = Label(root, text=" ", bg='#E3F0EB')
+space4 = Label(root, text=" ", bg='#E3F0EB')
+title = Label(root, text=".سلام، خوش آمدید", font=('IRANYekan', '22'), bg='#E3F0EB')
+title1 = Label(root, text="لطفاً نام و نام خانوادگی خود را در صورت موجود بودن در لیست انتخاب کنید",
                    font=('IRANYekan', '20'), bg='#E3F0EB')
-    title3 = Label(root, text=".و در غیر این صورت نام و نام خانوادگی خود را وارد کنید", font=('IRANYekan', '20'),
+title3 = Label(root, text=".و در غیر این صورت نام و نام خانوادگی خود را وارد کنید", font=('IRANYekan', '20'),
                    bg='#E3F0EB')
 
-    name2 = Entry(root, width=62, justify='right', font=('IRANYekan', 12))
-    name2.insert(0, "نام و نام خانوادگی")
-    name = ttk.Combobox(root, width=60, justify='right', font=('IRANYekan', 12))
-    valuelistForNamesOfComboBox.clear()
+name2 = Entry(root, width=62, justify='right', font=('IRANYekan', 12))
+name2.insert(0, "نام و نام خانوادگی")
+name = ttk.Combobox(root, width=60, justify='right', font=('IRANYekan', 12))
+valuelistForNamesOfComboBox.clear()
 
-    with open('listfile.txt', 'r', encoding="utf-8") as filehandle:
-        for line in filehandle:
-            currentPlace = line[:-1]
-            if currentPlace != "" and currentPlace != "نام و نام خانوادگی":
-                valuelistForNamesOfComboBox.append(currentPlace)
+with open('listfile.txt', 'r', encoding="utf-8") as filehandle:
+    for line in filehandle:
+        currentPlace = line[:-1]
+        if currentPlace != "" and currentPlace != "نام و نام خانوادگی":
+            valuelistForNamesOfComboBox.append(currentPlace)
 
-    name['values'] = valuelistForNamesOfComboBox
-    name.insert(0, "  نام و نام خانوادگی")
+name['values'] = valuelistForNamesOfComboBox
+name.insert(0, "  نام و نام خانوادگی")
 
-    sabtname = Button(root, text="ثبت", bg='#A2DDA5', font=('IRANYekan', '20'), command=menu)
-    sabtname.config(height=1, width=20)
-    space.pack()
-    title.pack()
-    space1.pack()
-    title1.pack()
-    title3.pack()
-    space4.pack()
-    name2.pack()
-    name.pack()
-    space2.pack()
-    sabtname.pack()
-    space3.pack()
-    root.mainloop()
+sabtname = Button(root, text="ثبت", bg='#A2DDA5', font=('IRANYekan', '20'), command=menu)
+sabtname.config(height=1, width=20)
+space.pack()
+title.pack()
+space1.pack()
+title1.pack()
+title3.pack()
+space4.pack()
+name2.pack()
+name.pack()
+space2.pack()
+sabtname.pack()
+space3.pack()
+root.mainloop()
 # MakePDF('ardavanxxx.pdf', 'نام و نام خانوادگی', ['نام و نام خانوادگی']
-menutostart()
